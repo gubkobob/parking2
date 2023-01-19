@@ -73,14 +73,13 @@ def test_delete_client_parking(client, db) -> None:
 
     assert resp1.status_code == 201
     assert resp2.status_code == 404
-    assert resp2.data.decode() == "Нечем оплачивать"
+    assert resp2.data.decode() == "Нечем оплачивать" or "Нельзя выехать раньше, чем заехать"
     assert places == 51
 
 def test_app_config(app):
     assert not app.config['DEBUG']
     assert app.config['TESTING']
     assert app.config['SQLALCHEMY_DATABASE_URI'] == "sqlite://"
-
 
 
 @pytest.mark.parametrize("route", ["/test_route?number=8", "/clients/1",

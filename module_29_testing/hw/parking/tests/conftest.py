@@ -36,12 +36,10 @@ def app():
                            count_available_places=55)
         client_parking1 = ClientParking(id=1,
                                        time_in=datetime.now() - timedelta(hours=2),
-                                       time_out=datetime.now(),
                                        client_id=1,
                                        parking_id=1)
         client_parking2 = ClientParking(id=2,
-                                        time_in=datetime.now() - timedelta(hours=2),
-                                        time_out=datetime.now(),
+                                        time_in=datetime.now() + timedelta(hours=1),
                                         client_id=2,
                                         parking_id=2)
 

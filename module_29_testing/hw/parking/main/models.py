@@ -35,6 +35,22 @@ class Parking(db.Model):
         return {c.name: getattr(self, c.name) for c in
                 self.__table__.columns}
 
+class ParkingLog(db.Model):
+    __tablename__ = 'parking_log'
+
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    parking_id = db.Column(db.Integer, db.ForeignKey('parkings.id'), nullable=False)
+    time_in = db.Column(db.DateTime, nullable=False)
+    time_out = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f"Parking on {self.address}"
+
+    def to_json(self) -> Dict[str, Any]:
+        return {c.name: getattr(self, c.name) for c in
+                self.__table__.columns}
+
 
 class ClientParking(db.Model):
     __tablename__ = 'clientparkings'

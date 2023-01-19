@@ -13,7 +13,7 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
 
-    from .models import Client, Parking, ClientParking
+    from .models import Client, Parking, ClientParking, ParkingLog
 
     @app.before_first_request
     def before_request_func():
@@ -121,8 +121,15 @@ def create_app():
         if client_parking:
             if not client_parking.client.credit_card:
                 return "Нечем оплачивать", 404
+            if client_parking.time_in > datetime.now():
+                return "Нельзя выехать раньше, чем заехать", 404
 
             client_parking.parking.count_available_places += 1
+            client_parking_log = ParkingLog(client_id=client_parking.client_id,
+                                            parking_id=client_parking.parking_id,
+                                            time_in=client_parking.time_in,
+                                            time_out=datetime.now())
+            db.session.add(client_parking_log)
             db.session.query(ClientParking).filter(ClientParking.id == client_parking.id).delete()
             db.session.commit()
             return '', 201
